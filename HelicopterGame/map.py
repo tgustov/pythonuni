@@ -13,6 +13,7 @@ CELL_TYPES = "🟩🌲🌊🏥🏬🔥"
 TREE_BONUS = 100
 #TODO increase upgarde cost to 5000 later
 UPGRADE_COST = 500
+LIFE_COST = 200
 
 class Map:
 
@@ -24,6 +25,7 @@ class Map:
         self.generate_river(10)
         self.generate_river(10)
         self.generate_upgrade_shop()
+        self.generate_hospital()
 
 
     def check_bounds(self, x, y):
@@ -31,13 +33,18 @@ class Map:
             return False
         return True
 
-    def print_map(self, helico):
+    def print_map(self, helico, clouds):
         print(("⬛") * (self.w + 2))
         for ri in range(self.h):
             print("⬛", end="")
             for ci in range(self.w):
                 cell = self.cells[ri][ci]
-                if (helico.x == ri and helico.y == ci):
+
+                if (clouds.cells[ri][ci] == 1):
+                    print("⬜", end="")
+                elif (clouds.cells[ri][ci] == 2):
+                    print("🟥", end="")
+                elif (helico.x == ri and helico.y == ci):
                     print("🚁", end="")
                 elif (cell >= 0 and cell < len(CELL_TYPES)):
                     print(CELL_TYPES[cell], end="")
@@ -75,6 +82,15 @@ class Map:
         cx, cy = c[0], c[1]
         self.cells[cx][cy] = 4
 
+    def generate_hospital(self):
+        c = randcell(self.w, self.h)
+        cx, cy = c[0], c[1]
+        if self.cells[cx][cy] != 4:
+            self.cells[cx][cy] = 3
+        else:
+            self.generate_hospital()
+
+
     def add_fire(self):
         c = randcell(self.w, self.h)
         cx, cy = c[0], c[1]
@@ -101,6 +117,9 @@ class Map:
         if (c == 4 and helico.score >= UPGRADE_COST):
             helico.mxtank += 1
             helico.score -= UPGRADE_COST
+        if (c == 3 and helico.score >= LIFE_COST):
+            helico.lives += 1
+            helico.score -= LIFE_COST
 
 
 
