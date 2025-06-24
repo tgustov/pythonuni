@@ -10,8 +10,8 @@ from clouds import Clouds
 
 TICK_SLEEP = 0.1
 TREE_UPDATE = 100
-FIRE_UPDATE = 50
-CLOUDS_UPDATE = 100
+FIRE_UPDATE = 25
+CLOUDS_UPDATE = 50
 MAP_W, MAP_H = 20, 10
 
 field = Map(MAP_W, MAP_H)
